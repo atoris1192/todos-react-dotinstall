@@ -12,11 +12,21 @@ const todos:Todos[]  = [
   {id: 1, title: "Task 1", isDone: false},
   {id: 2, title: "Task 2", isDone: true},
 ]
+function TodoItem(props) {
+
+  return (
+    <li key={props.todo.id}>{ props.todo.title }</li>
+  )
+
+}
 
 function TodoList(props) {
   const todos = props.todos.map(todo => {
     return (
-      <li key={ todo.id }>{ todo.title } </li>
+      <TodoItem 
+        key={todo.id} 
+        todo={todo}
+      />
     )
   });
   return (

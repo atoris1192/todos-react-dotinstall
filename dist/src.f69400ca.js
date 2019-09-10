@@ -30668,11 +30668,18 @@ var todos = [{
   isDone: true
 }];
 
+function TodoItem(props) {
+  return React.createElement("li", {
+    key: props.todo.id
+  }, props.todo.title);
+}
+
 function TodoList(props) {
   var todos = props.todos.map(function (todo) {
-    return React.createElement("li", {
-      key: todo.id
-    }, todo.title, " ");
+    return React.createElement(TodoItem, {
+      key: todo.id,
+      todo: todo
+    });
   });
   return React.createElement("ul", null, todos);
 }
