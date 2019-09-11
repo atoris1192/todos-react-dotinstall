@@ -30684,7 +30684,7 @@ function TodoItem(props) {
     onClick: function onClick() {
       return props.deleteTodo(props.todo);
     }
-  }, "[x]"));
+  }, "[X]"));
 }
 
 function TodoList(props) {
@@ -30699,13 +30699,21 @@ function TodoList(props) {
   return React.createElement("ul", null, props.todos.length ? todos : React.createElement("li", null, "Nothing to do!"));
 }
 
-function TodoForm() {
-  return React.createElement("form", null, React.createElement("input", {
-    type: "text"
+function TodoForm(props) {
+  return React.createElement("form", {
+    onSubmit: props.addTodo
+  }, React.createElement("input", {
+    type: "text",
+    value: props.item,
+    onChange: props.updateItem
   }), React.createElement("input", {
     type: "submit",
     value: "Add"
   }));
+}
+
+function getUniqueId() {
+  return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
 }
 
 var Application =
@@ -30723,8 +30731,50 @@ function (_super) {
     _this.checkTodo = _this.checkTodo.bind(_this);
     _this.deleteTodo = _this.deleteTodo.bind(_this);
     _this.updateItem = _this.updateItem.bind(_this);
+    _this.addTodo = _this.addTodo.bind(_this);
     return _this;
   }
+
+  Application.prototype.addTodo = function (e) {
+    e.preventDefault();
+
+    if (this.state.item.trim() === '') {
+      return;
+    }
+
+    var item = {
+      id: getUniqueId(),
+      title: this.state.item,
+      isDone: false
+    };
+    var todos = this.state.todos.slice();
+    todos.push(item);
+    this.setState({
+      todos: todos,
+      item: ''
+    });
+  };
+
+  Application.prototype.addTodo = function (e) {
+    e.preventDefault();
+    console.log("addTodo...");
+
+    if (this.state.item.trim() === '') {
+      return;
+    }
+
+    var item = {
+      id: getUniqueId(),
+      title: this.state.item,
+      isDone: false
+    };
+    var todos = this.state.todos.slice();
+    todos.push(item);
+    this.setState({
+      todos: todos,
+      item: ''
+    });
+  };
 
   Application.prototype.deleteTodo = function (todo) {
     // if (!confirm('are you sure ?')) return;
@@ -30768,7 +30818,8 @@ function (_super) {
       deleteTodo: this.deleteTodo
     }), React.createElement(TodoForm, {
       item: this.state.item,
-      updateItem: this.updateItem
+      updateItem: this.updateItem,
+      addTodo: this.addTodo
     }));
   };
 
@@ -30908,7 +30959,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49715" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56204" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

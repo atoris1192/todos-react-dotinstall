@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 export interface HelloProps { name: string; }
 
 interface Todos {
@@ -13,18 +14,22 @@ const todos:Todos[]  = [
   {id: 2, title: "Task 2", isDone: true},
 ]
 function TodoItem(props) {
-  return (
+  return(
     <li key={props.todo.id}>
       <label>
         <input type="checkbox"
           checked={props.todo.isDone}
-          onChange={() => props.checkTodo(props.todo)}
+          onChange={ () => props.checkTodo(props.todo)}
         /> 
-        <span className={ props.todo.isDone ? 'done' : ''}>
-          { props.todo.title }
+        <span
+           className={props.todo.isDone ? 'done': ''}
+          >
+          {props.todo.title}
         </span>
       </label>
-      <span className="cmd" onClick={ () => props.deleteTodo(props.todo)} >[x]</span>
+       <span className="cmd" onClick={ () => props.deleteTodo(props.todo)}>
+        [X]
+      </span>    
     </li>
   )
 }
@@ -39,7 +44,7 @@ function TodoList(props) {
         deleteTodo={props.deleteTodo}
       />
     )
-  });
+  })
   return (
     <ul>
       { props.todos.length ? todos : <li>Nothing to do!</li> }
@@ -47,13 +52,17 @@ function TodoList(props) {
   )
 }
 
-function TodoForm() {
+function TodoForm(props) {
   return (
-    <form>
-      <input type="text"/>
+    <form onSubmit={props.addTodo}>
+      <input type="text" value={props.item} onChange={props.updateItem}/>
       <input type="submit" value="Add"/>
     </form>
-  )
+  );
+}
+
+function getUniqueId() {
+  return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
 }
 
 class Application extends React.Component<HelloProps, {}> {
@@ -68,6 +77,46 @@ class Application extends React.Component<HelloProps, {}> {
     this.checkTodo = this.checkTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.updateItem = this.updateItem.bind(this);
+    this.addTodo = this.addTodo.bind(this);
+  }
+  addTodo(e) {
+    e.preventDefault();
+
+    if (this.state.item.trim() === '') {
+      return;
+    }
+
+    const item = {
+      id: getUniqueId(),
+      title: this.state.item,
+      isDone: false
+    };
+
+    const todos = this.state.todos.slice();
+    todos.push(item);
+    this.setState({
+      todos: todos,
+      item: ''
+    });
+  }
+  addTodo(e) {
+    e.preventDefault();
+    console.log("addTodo...");
+    
+    if(this.state.item.trim() === '') {
+      return;
+    }
+    const item = {
+      id: getUniqueId(),
+      title: this.state.item,
+      isDone: false,
+    }
+    const todos = this.state.todos.slice();
+    todos.push(item);
+    this.setState({
+      todos: todos,
+      item: ''
+    })
   }
   deleteTodo(todo){
     // if (!confirm('are you sure ?')) return;
@@ -114,6 +163,7 @@ class Application extends React.Component<HelloProps, {}> {
          <TodoForm 
            item={this.state.item}
            updateItem={this.updateItem}
+           addTodo={this.addTodo}
          />
       </div>
     )
