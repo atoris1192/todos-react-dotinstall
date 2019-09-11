@@ -1,0 +1,1 @@
+{"version":3,"sources":["style.scss"],"names":[],"mappings":"AAAA;EACE;EACA","file":"src.f69400ca.css","sourceRoot":"../src","sourcesContent":[".done {\n  text-decoration: line-through;\n  color: #ccc;\n}"]}

@@ -30671,14 +30671,23 @@ var todos = [{
 function TodoItem(props) {
   return React.createElement("li", {
     key: props.todo.id
-  }, props.todo.title);
+  }, React.createElement("label", null, React.createElement("input", {
+    type: "checkbox",
+    checked: props.todo.isDone,
+    onChange: function onChange() {
+      return props.checkTodo(props.todo);
+    }
+  }), React.createElement("span", {
+    className: props.todo.isDone ? 'done' : ''
+  }, props.todo.title)));
 }
 
 function TodoList(props) {
   var todos = props.todos.map(function (todo) {
     return React.createElement(TodoItem, {
       key: todo.id,
-      todo: todo
+      todo: todo,
+      checkTodo: props.checkTodo
     });
   });
   return React.createElement("ul", null, todos);
@@ -30695,12 +30704,31 @@ function (_super) {
     _this.state = {
       todos: todos
     };
+    _this.checkTodo = _this.checkTodo.bind(_this);
     return _this;
   }
 
+  Application.prototype.checkTodo = function (todo) {
+    var todos = this.state.todos.map(function (todo) {
+      return {
+        id: todo.id,
+        title: todo.title,
+        isDone: todo.isDone
+      };
+    });
+    var pos = this.state.todos.map(function (todo) {
+      return todo.id;
+    }).indexOf(todo.id);
+    todos[pos].isDone = !todos[pos].isDone;
+    this.setState({
+      todos: todos
+    });
+  };
+
   Application.prototype.render = function () {
     return React.createElement("div", null, React.createElement("h1", null, "My Todos "), React.createElement(TodoList, {
-      todos: this.state.todos
+      todos: this.state.todos,
+      checkTodo: this.checkTodo
     }));
   };
 
@@ -30708,7 +30736,79 @@ function (_super) {
 }(React.Component);
 
 exports.default = Application;
-},{"react":"../node_modules/react/index.js"}],"index.tsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"style.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.tsx":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -30737,8 +30837,10 @@ var ReactDOM = __importStar(require("react-dom"));
 
 var Application_1 = __importDefault(require("./Application"));
 
+require("../src/style.scss");
+
 ReactDOM.render(React.createElement(Application_1.default, null), document.getElementById('app'));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./Application":"Application.tsx"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./Application":"Application.tsx","../src/style.scss":"style.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
