@@ -30679,7 +30679,12 @@ function TodoItem(props) {
     }
   }), React.createElement("span", {
     className: props.todo.isDone ? 'done' : ''
-  }, props.todo.title)));
+  }, props.todo.title)), React.createElement("span", {
+    className: "cmd",
+    onClick: function onClick() {
+      return props.deleteTodo(props.todo);
+    }
+  }, "[x]"));
 }
 
 function TodoList(props) {
@@ -30687,10 +30692,11 @@ function TodoList(props) {
     return React.createElement(TodoItem, {
       key: todo.id,
       todo: todo,
-      checkTodo: props.checkTodo
+      checkTodo: props.checkTodo,
+      deleteTodo: props.deleteTodo
     });
   });
-  return React.createElement("ul", null, todos);
+  return React.createElement("ul", null, props.todos.length ? todos : React.createElement("li", null, "Nothing to do!"));
 }
 
 var Application =
@@ -30705,8 +30711,19 @@ function (_super) {
       todos: todos
     };
     _this.checkTodo = _this.checkTodo.bind(_this);
+    _this.deleteTodo = _this.deleteTodo.bind(_this);
     return _this;
   }
+
+  Application.prototype.deleteTodo = function (todo) {
+    // if (!confirm('are you sure ?')) return;
+    var todos = this.state.todos.slice();
+    var pos = this.state.todos.indexOf(todo);
+    todos.splice(pos, 1);
+    this.setState({
+      todos: todos
+    });
+  };
 
   Application.prototype.checkTodo = function (todo) {
     var todos = this.state.todos.map(function (todo) {
@@ -30726,9 +30743,12 @@ function (_super) {
   };
 
   Application.prototype.render = function () {
-    return React.createElement("div", null, React.createElement("h1", null, "My Todos "), React.createElement(TodoList, {
+    return React.createElement("div", {
+      className: "container"
+    }, React.createElement("h1", null, "My Todos "), React.createElement(TodoList, {
       todos: this.state.todos,
-      checkTodo: this.checkTodo
+      checkTodo: this.checkTodo,
+      deleteTodo: this.deleteTodo
     }));
   };
 

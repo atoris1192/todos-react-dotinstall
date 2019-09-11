@@ -24,6 +24,7 @@ function TodoItem(props) {
           { props.todo.title }
         </span>
       </label>
+      <span className="cmd" onClick={ () => props.deleteTodo(props.todo)} >[x]</span>
     </li>
   )
 }
@@ -35,24 +36,38 @@ function TodoList(props) {
         key={todo.id} 
         todo={todo}
         checkTodo={props.checkTodo}
+        deleteTodo={props.deleteTodo}
       />
     )
   });
   return (
     <ul>
-      { todos }
+      { props.todos.length ? todos : <li>Nothing to do!</li> }
     </ul>
   )
 }
 
 class Application extends React.Component<HelloProps, {}> {
   private state: any;
+  private setState: any;
   constructor() {
     super ();
     this.state = {
       todos: todos,
     }
     this.checkTodo = this.checkTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
+  }
+  deleteTodo(todo){
+    // if (!confirm('are you sure ?')) return;
+
+    const todos = this.state.todos.slice();
+    const pos = this.state.todos.indexOf(todo);
+
+    todos.splice(pos, 1);
+    this.setState({
+      todos: todos
+    });
   }
   checkTodo(todo) {
     const todos = this.state.todos.map(todo => {
@@ -73,11 +88,12 @@ class Application extends React.Component<HelloProps, {}> {
   }
   render() {
     return (
-      <div>
+      <div className="container">
         <h1>My Todos </h1>
         <TodoList
           todos={ this.state.todos }
           checkTodo={ this.checkTodo }
+          deleteTodo={ this.deleteTodo }
          />
 
       </div>

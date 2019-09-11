@@ -1,3 +1,29 @@
+
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+}
+.container {
+  width: 300px;
+  margin: auto;
+  h1 {
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    padding: 16px 0;
+  }
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    line-height: 1.5;
+  }
+  input[type="checkbox"] {
+    margin-right: 15px;
+  }
+
+}
 .done {
   text-decoration: line-through;
   color: #ccc;
