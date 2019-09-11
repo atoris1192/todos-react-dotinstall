@@ -30672,7 +30672,9 @@ function TodoHeader(props) {
   var remaining = props.todos.filter(function (todo) {
     return !todo.isDone;
   });
-  return React.createElement("h1", null, "My todos", React.createElement("span", null, remaining.length, "/", props.todos.length));
+  return React.createElement("h1", null, "My todos", React.createElement("button", {
+    onClick: props.purge
+  }, "Purge"), React.createElement("span", null, remaining.length, "/", props.todos.length));
 }
 
 function TodoItem(props) {
@@ -30739,26 +30741,17 @@ function (_super) {
     _this.deleteTodo = _this.deleteTodo.bind(_this);
     _this.updateItem = _this.updateItem.bind(_this);
     _this.addTodo = _this.addTodo.bind(_this);
+    _this.purge = _this.purge.bind(_this);
     return _this;
   }
 
-  Application.prototype.addTodo = function (e) {
-    e.preventDefault();
-
-    if (this.state.item.trim() === '') {
-      return;
-    }
-
-    var item = {
-      id: getUniqueId(),
-      title: this.state.item,
-      isDone: false
-    };
-    var todos = this.state.todos.slice();
-    todos.push(item);
+  Application.prototype.purge = function () {
+    if (!confirm("are you sure ?")) return;
+    var todos = this.state.todos.filter(function (todo) {
+      return !todo.isDone;
+    });
     this.setState({
-      todos: todos,
-      item: ''
+      todos: todos
     });
   };
 
@@ -30816,11 +30809,22 @@ function (_super) {
     });
   };
 
+  Application.prototype.componentDidUpdate = function () {
+    localStorage.setItem('todos', JSON.stringify(this.state.todos));
+  };
+
+  Application.prototype.componentDidMount = function () {
+    this.setState({
+      todos: JSON.parse(localStorage.getItem('todos')) || {}
+    });
+  };
+
   Application.prototype.render = function () {
     return React.createElement("div", {
       className: "container"
     }, React.createElement(TodoHeader, {
-      todos: this.state.todos
+      todos: this.state.todos,
+      purge: this.purge
     }), React.createElement(TodoList, {
       todos: this.state.todos,
       checkTodo: this.checkTodo,
@@ -30968,7 +30972,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50277" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60185" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -10,6 +10,10 @@ h1 > span {
   font-weight: normal;
 }
 
+h1 > button {
+  float: right;
+}
+
 .container {
   width: 300px;
   margin: auto;

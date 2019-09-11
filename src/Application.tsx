@@ -20,7 +20,7 @@ function TodoHeader (props) {
   return (
     <h1>
       My todos
-      {/* <span>1/3</span> */}
+      <button onClick={props.purge}>Purge</button>
       <span>{remaining.length}/{props.todos.length}</span>
     </h1>
   )
@@ -90,26 +90,17 @@ class Application extends React.Component<HelloProps, {}> {
     this.deleteTodo = this.deleteTodo.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.addTodo = this.addTodo.bind(this);
+    this.purge = this.purge.bind(this);
   }
-  addTodo(e) {
-    e.preventDefault();
+  purge() {
+    if (!confirm ("are you sure ?")) return
 
-    if (this.state.item.trim() === '') {
-      return;
-    }
-
-    const item = {
-      id: getUniqueId(),
-      title: this.state.item,
-      isDone: false
-    };
-
-    const todos = this.state.todos.slice();
-    todos.push(item);
+    const todos = this.state.todos.filter(todo => {
+      return !todo.isDone;
+    })
     this.setState({
       todos: todos,
-      item: ''
-    });
+    })
   }
   addTodo(e) {
     e.preventDefault();
@@ -163,11 +154,22 @@ class Application extends React.Component<HelloProps, {}> {
       item: e.target.value
     })
   }
+  componentDidUpdate() {
+    localStorage.setItem('todos', JSON.stringify(this.state.todos))
+  }
+  componentDidMount() {
+    this.setState({
+      todos: JSON.parse(localStorage.getItem('todos')) || {}
+    });
+
+  }
   render() {
     return (
       <div className="container">
-        <TodoHeader todos={this.state.todos}/>
-        {/* <h1>My Todos </h1> */}
+        <TodoHeader
+          todos={this.state.todos}
+          purge={this.purge}
+        />
         <TodoList
           todos={ this.state.todos }
           checkTodo={ this.checkTodo }
