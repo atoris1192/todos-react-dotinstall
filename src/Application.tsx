@@ -46,6 +46,14 @@ function TodoList(props) {
     </ul>
   )
 }
+function TodoForm() {
+  return (
+    <form>
+      <input type="text"/>
+      <input type="submit" value="Add"/>
+    </form>
+  )
+}
 
 class Application extends React.Component<HelloProps, {}> {
   private state: any;
@@ -95,7 +103,7 @@ class Application extends React.Component<HelloProps, {}> {
           checkTodo={ this.checkTodo }
           deleteTodo={ this.deleteTodo }
          />
-
+         <TodoForm />
       </div>
     )
   }

@@ -30699,6 +30699,15 @@ function TodoList(props) {
   return React.createElement("ul", null, props.todos.length ? todos : React.createElement("li", null, "Nothing to do!"));
 }
 
+function TodoForm() {
+  return React.createElement("form", null, React.createElement("input", {
+    type: "text"
+  }), React.createElement("input", {
+    type: "submit",
+    value: "Add"
+  }));
+}
+
 var Application =
 /** @class */
 function (_super) {
@@ -30749,7 +30758,7 @@ function (_super) {
       todos: this.state.todos,
       checkTodo: this.checkTodo,
       deleteTodo: this.deleteTodo
-    }));
+    }), React.createElement(TodoForm, null));
   };
 
   return Application;
