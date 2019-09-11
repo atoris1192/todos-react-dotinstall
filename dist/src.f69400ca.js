@@ -30668,6 +30668,13 @@ var todos = [{
   isDone: true
 }];
 
+function TodoHeader(props) {
+  var remaining = props.todos.filter(function (todo) {
+    return !todo.isDone;
+  });
+  return React.createElement("h1", null, "My todos", React.createElement("span", null, remaining.length, "/", props.todos.length));
+}
+
 function TodoItem(props) {
   return React.createElement("li", {
     key: props.todo.id
@@ -30812,7 +30819,9 @@ function (_super) {
   Application.prototype.render = function () {
     return React.createElement("div", {
       className: "container"
-    }, React.createElement("h1", null, "My Todos "), React.createElement(TodoList, {
+    }, React.createElement(TodoHeader, {
+      todos: this.state.todos
+    }), React.createElement(TodoList, {
       todos: this.state.todos,
       checkTodo: this.checkTodo,
       deleteTodo: this.deleteTodo
@@ -30959,7 +30968,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56204" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50277" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -13,6 +13,18 @@ const todos:Todos[]  = [
   {id: 1, title: "Task 1", isDone: false},
   {id: 2, title: "Task 2", isDone: true},
 ]
+function TodoHeader (props) {
+  const remaining = props.todos.filter(todo => {
+    return !todo.isDone;
+  })
+  return (
+    <h1>
+      My todos
+      {/* <span>1/3</span> */}
+      <span>{remaining.length}/{props.todos.length}</span>
+    </h1>
+  )
+}
 function TodoItem(props) {
   return(
     <li key={props.todo.id}>
@@ -154,7 +166,8 @@ class Application extends React.Component<HelloProps, {}> {
   render() {
     return (
       <div className="container">
-        <h1>My Todos </h1>
+        <TodoHeader todos={this.state.todos}/>
+        {/* <h1>My Todos </h1> */}
         <TodoList
           todos={ this.state.todos }
           checkTodo={ this.checkTodo }
