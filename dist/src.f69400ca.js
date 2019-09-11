@@ -30717,10 +30717,12 @@ function (_super) {
     var _this = _super.call(this) || this;
 
     _this.state = {
-      todos: todos
+      todos: todos,
+      item: ''
     };
     _this.checkTodo = _this.checkTodo.bind(_this);
     _this.deleteTodo = _this.deleteTodo.bind(_this);
+    _this.updateItem = _this.updateItem.bind(_this);
     return _this;
   }
 
@@ -30751,6 +30753,12 @@ function (_super) {
     });
   };
 
+  Application.prototype.updateItem = function (e) {
+    this.setState({
+      item: e.target.value
+    });
+  };
+
   Application.prototype.render = function () {
     return React.createElement("div", {
       className: "container"
@@ -30758,7 +30766,10 @@ function (_super) {
       todos: this.state.todos,
       checkTodo: this.checkTodo,
       deleteTodo: this.deleteTodo
-    }), React.createElement(TodoForm, null));
+    }), React.createElement(TodoForm, {
+      item: this.state.item,
+      updateItem: this.updateItem
+    }));
   };
 
   return Application;

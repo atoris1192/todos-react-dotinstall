@@ -46,6 +46,7 @@ function TodoList(props) {
     </ul>
   )
 }
+
 function TodoForm() {
   return (
     <form>
@@ -62,9 +63,11 @@ class Application extends React.Component<HelloProps, {}> {
     super ();
     this.state = {
       todos: todos,
+      item: '',
     }
     this.checkTodo = this.checkTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.updateItem = this.updateItem.bind(this);
   }
   deleteTodo(todo){
     // if (!confirm('are you sure ?')) return;
@@ -93,6 +96,11 @@ class Application extends React.Component<HelloProps, {}> {
     this.setState({
       todos: todos
     })
+  }o
+  updateItem (e) {
+    this.setState({
+      item: e.target.value
+    })
   }
   render() {
     return (
@@ -103,7 +111,10 @@ class Application extends React.Component<HelloProps, {}> {
           checkTodo={ this.checkTodo }
           deleteTodo={ this.deleteTodo }
          />
-         <TodoForm />
+         <TodoForm 
+           item={this.state.item}
+           updateItem={this.updateItem}
+         />
       </div>
     )
   }
