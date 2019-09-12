@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "sass": "^1.23.0-module.beta.1",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.3"
   }
 }
