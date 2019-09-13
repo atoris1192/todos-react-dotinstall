@@ -12,6 +12,25 @@ const todos: Todos[] = [
   { id: 2, title: "Task 2", isDone: true },
 ]
 
+function TodoHeader(props) {
+  const remaining = props.todos.filter( todo => {
+    return !todo.isDone
+  })
+
+  return(
+    <h1>
+      My Todos
+      <span> {remaining.length} / {props.todos.length}</span>
+      <button
+        onClick={ props.purge }
+        className="delete"
+        >
+          Purge
+      </button>
+    </h1>
+  )
+}
+
 function TodoItem(props) {
 
   return (
@@ -67,18 +86,6 @@ function TodoForm(props) {
 function getUniqueId() {
   return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
 }
-function TodoHeader(props) {
-  const remaining = props.todos.filter( todo => {
-    return !todo.isDone
-  })
-
-  return(
-    <h1>
-      My Todos
-      <span> {remaining.length} / {props.todos.length}</span>
-    </h1>
-  )
-}
 
 class Application extends React.Component {
   private state: any;
@@ -93,6 +100,19 @@ class Application extends React.Component {
     this.deleteTodo = this.deleteTodo.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.addTodo = this.addTodo.bind(this);
+    this.purge = this.purge.bind(this);
+  }
+  purge() {
+console.log("purge");
+
+    if(!confirm('Are you sure ?')) return;
+
+    const todos = this.state.todos.filter( todo => {
+      return !todo.isDone;
+    })
+    this.setState({
+      todos: todos
+    })
   }
   addTodo(e) {
     e.preventDefault();
@@ -110,8 +130,8 @@ class Application extends React.Component {
       item: '',
     })
 
-console.log('GetUniqueId: ', getUniqueId());
-console.log('Item: ',this.state.item);
+// console.log('GetUniqueId: ', getUniqueId());
+// console.log('Item: ',this.state.item);
   }
   updateItem(e) {
     this.setState({
@@ -147,7 +167,10 @@ console.log('Item: ',this.state.item);
   render() {
     return(
       <div className="container">
-        <TodoHeader todos={this.state.todos}/>
+        <TodoHeader
+          todos={this.state.todos}
+          purge={ this.purge }
+          />
         {/* <h1> My Todos </h1> */}
         <TodoList
           todos={this.state.todos}
