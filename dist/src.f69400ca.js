@@ -30675,7 +30675,12 @@ function TodoItem(props) {
     }
   }), react_1.default.createElement("span", {
     className: props.todo.isDone ? 'done' : ''
-  }, props.todo.title)));
+  }, props.todo.title)), react_1.default.createElement("span", {
+    className: "cmd",
+    onClick: function onClick() {
+      return props.deleteTodo(props.todo);
+    }
+  }, "[x]"));
 }
 
 function TodoList(props) {
@@ -30683,10 +30688,28 @@ function TodoList(props) {
     return react_1.default.createElement(TodoItem, {
       key: todo.id,
       todo: todo,
-      checkTodo: props.checkTodo
+      checkTodo: props.checkTodo,
+      deleteTodo: props.deleteTodo
     });
   });
   return react_1.default.createElement("ul", null, todos);
+}
+
+function TodoForm(props) {
+  return react_1.default.createElement("form", {
+    onSubmit: props.addTodo
+  }, react_1.default.createElement("input", {
+    type: "text",
+    value: props.item,
+    onChange: props.updateItem
+  }), react_1.default.createElement("input", {
+    type: "submit",
+    value: "Add"
+  }));
+}
+
+function getUniqueId() {
+  return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
 }
 
 var Application =
@@ -30698,26 +30721,55 @@ function (_super) {
     var _this = _super.call(this) || this;
 
     _this.state = {
-      todos: todos
+      todos: todos,
+      item: ''
     };
     _this.checkTodo = _this.checkTodo.bind(_this);
+    _this.deleteTodo = _this.deleteTodo.bind(_this);
+    _this.updateItem = _this.updateItem.bind(_this);
+    _this.addTodo = _this.addTodo.bind(_this);
     return _this;
   }
 
+  Application.prototype.addTodo = function (e) {
+    e.preventDefault();
+    if (this.state.item.trim() === '') return;
+    var item = {
+      id: getUniqueId(),
+      title: this.state.item,
+      isDone: false
+    };
+    var todos = this.state.todos.slice();
+    todos.push(item);
+    this.setState({
+      todos: todos,
+      item: ''
+    });
+    console.log('GetUniqueId: ', getUniqueId());
+    console.log('Item: ', this.state.item);
+  };
+
+  Application.prototype.updateItem = function (e) {
+    this.setState({
+      item: e.target.value
+    });
+  };
+
+  Application.prototype.deleteTodo = function (props) {
+    if (!confirm("Are you sure ?")) return;
+    var pos = this.state.todos.indexOf(props);
+    var todos = this.state.todos.slice();
+    todos.splice(pos, 1);
+    this.setState({
+      todos: todos
+    });
+  };
+
   Application.prototype.checkTodo = function (props) {
-    // クリックしたnumber 0 ~ 2
     var pos = this.state.todos.map(function (todo) {
       return todo.id;
     }).indexOf(props.id);
     var todos = this.state.todos.slice(); // コピー
-    // const todos = this.state.todos.map( todo => {
-    //   return {
-    //     id: todo.id,
-    //     title: todo.title, 
-    //     isDone: todo.isDone, 
-    //   }
-    // })
-    // console.log(todos);
 
     todos[pos].isDone = !todos[pos].isDone;
     this.setState({
@@ -30727,9 +30779,16 @@ function (_super) {
   };
 
   Application.prototype.render = function () {
-    return react_1.default.createElement("div", null, react_1.default.createElement(TodoList, {
+    return react_1.default.createElement("div", {
+      className: "container"
+    }, react_1.default.createElement("h1", null, " My Todos "), react_1.default.createElement(TodoList, {
       todos: this.state.todos,
-      checkTodo: this.checkTodo
+      checkTodo: this.checkTodo,
+      deleteTodo: this.deleteTodo
+    }), react_1.default.createElement(TodoForm, {
+      item: this.state.item,
+      updateItem: this.updateItem,
+      addTodo: this.addTodo
     }));
   };
 

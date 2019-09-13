@@ -25,6 +25,10 @@ function TodoItem(props) {
           { props.todo.title}
         </span>
       </label>
+      <span className="cmd" 
+        onClick={ () => props.deleteTodo(props.todo)}
+      >[x]
+      </span>
     </li>
   )
 }
@@ -36,6 +40,7 @@ function TodoList(props) {
         key={todo.id}
         todo={todo}
         checkTodo={ props.checkTodo }
+        deleteTodo={ props.deleteTodo }
       />
     )
   })
@@ -46,6 +51,23 @@ function TodoList(props) {
     </ul>
   )
 }
+
+function TodoForm(props) {
+
+  return(
+    <form onSubmit={ props.addTodo }>
+      <input type="text"
+        value={props.item}
+        onChange={ props.updateItem }
+      />
+      <input type="submit" value="Add"/>
+    </form>
+  )
+}
+function getUniqueId() {
+  return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
+}
+
 class Application extends React.Component {
   private state: any;
   private setState: any;
@@ -53,38 +75,76 @@ class Application extends React.Component {
     super();
     this.state = {
       todos: todos,
+      item: '',
     }
     this.checkTodo = this.checkTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
+    this.updateItem = this.updateItem.bind(this);
+    this.addTodo = this.addTodo.bind(this);
+  }
+  addTodo(e) {
+    e.preventDefault();
+    if (this.state.item.trim() === '') return
+
+    const item = {
+      id: getUniqueId(),
+      title: this.state.item,
+      isDone: false,
+    }
+    const todos = this.state.todos.slice();
+    todos.push(item);
+    this.setState({
+      todos: todos,
+      item: '',
+    })
+
+console.log('GetUniqueId: ', getUniqueId());
+console.log('Item: ',this.state.item);
+  }
+  updateItem(e) {
+    this.setState({
+      item: e.target.value
+    })
+    
+  }
+  deleteTodo(props) {
+    if (!confirm("Are you sure ?")) return
+
+    const pos = this.state.todos.indexOf(props);
+    const todos = this.state.todos.slice();
+
+    todos.splice(pos, 1);
+    this.setState({
+      todos: todos,
+    })
+
   }
   checkTodo(props) {
-    // クリックしたnumber 0 ~ 2
     const pos = this.state.todos.map( todo => {
       return todo.id
     }).indexOf(props.id)
 
     const todos = this.state.todos.slice(); // コピー
 
-    // const todos = this.state.todos.map( todo => {
-    //   return {
-    //     id: todo.id,
-    //     title: todo.title, 
-    //     isDone: todo.isDone, 
-    //   }
-    // })
-    // console.log(todos);
-    
-   todos[pos].isDone = !todos[pos].isDone;
-   this.setState({
-     todos: todos // ここの todos で 既存のtodos を上書き
-   })
+    todos[pos].isDone = !todos[pos].isDone;
+    this.setState({
+      todos: todos // ここの todos で 既存のtodos を上書き
+    })
   }
 
   render() {
     return(
-      <div>
+      <div className="container">
+        <h1> My Todos </h1>
         <TodoList
           todos={this.state.todos}
           checkTodo={ this.checkTodo }
+          deleteTodo={ this.deleteTodo }
+        />
+        <TodoForm 
+          item={this.state.item}
+          updateItem={ this.updateItem }
+          addTodo={ this.addTodo }
         />
       </div>
     )
