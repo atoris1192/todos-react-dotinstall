@@ -30650,17 +30650,47 @@ Object.defineProperty(exports, "__esModule", {
 
 var react_1 = __importDefault(require("react"));
 
+var todos = [{
+  id: 0,
+  title: "Task 0",
+  isDone: false
+}, {
+  id: 1,
+  title: "Task 1",
+  isDone: false
+}, {
+  id: 2,
+  title: "Task 2",
+  isDone: true
+}];
+
+function TodoList(props) {
+  var todos = props.todos.map(function (todo) {
+    return react_1.default.createElement("li", {
+      key: todo.id
+    }, todo.title);
+  });
+  return react_1.default.createElement("ul", null, todos);
+}
+
 var Application =
 /** @class */
 function (_super) {
   __extends(Application, _super);
 
   function Application() {
-    return _super !== null && _super.apply(this, arguments) || this;
+    var _this = _super.call(this) || this;
+
+    _this.state = {
+      todos: todos
+    };
+    return _this;
   }
 
   Application.prototype.render = function () {
-    return react_1.default.createElement("div", null, "Hello");
+    return react_1.default.createElement("div", null, react_1.default.createElement(TodoList, {
+      todos: this.state.todos
+    }));
   };
 
   return Application;
