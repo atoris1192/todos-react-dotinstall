@@ -164,6 +164,15 @@ console.log("purge");
     })
   }
 
+  componentDidUpdate() {
+    localStorage.setItem('todos', JSON.stringify(this.state.todos));
+  }
+  componentDidMount() {
+    this.setState({
+      todos: JSON.parse(localStorage.getItem('todos')) || []
+    })
+  }
+
   render() {
     return(
       <div className="container">

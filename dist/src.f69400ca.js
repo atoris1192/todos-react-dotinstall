@@ -30799,6 +30799,16 @@ function (_super) {
     });
   };
 
+  Application.prototype.componentDidUpdate = function () {
+    localStorage.setItem('todos', JSON.stringify(this.state.todos));
+  };
+
+  Application.prototype.componentDidMount = function () {
+    this.setState({
+      todos: JSON.parse(localStorage.getItem('todos')) || []
+    });
+  };
+
   Application.prototype.render = function () {
     return react_1.default.createElement("div", {
       className: "container"
