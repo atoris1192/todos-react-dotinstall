@@ -49,7 +49,6 @@ function TodoList(props) {
 class Application extends React.Component {
   private state: any;
   private setState: any;
-  // private checkTodo: any;
   constructor() {
     super();
     this.state = {
@@ -58,22 +57,26 @@ class Application extends React.Component {
     this.checkTodo = this.checkTodo.bind(this);
   }
   checkTodo(props) {
+    // クリックしたnumber 0 ~ 2
     const pos = this.state.todos.map( todo => {
       return todo.id
     }).indexOf(props.id)
-    console.log(pos);
-    const todos = this.state.todos.map( todo => {
-      return {
-        id: todo.id,
-        title: todo.title, 
-        isDone: todo.isDone, 
-      }
-    })
+
+    const todos = this.state.todos.slice(); // コピー
+
+    // const todos = this.state.todos.map( todo => {
+    //   return {
+    //     id: todo.id,
+    //     title: todo.title, 
+    //     isDone: todo.isDone, 
+    //   }
+    // })
+    // console.log(todos);
+    
    todos[pos].isDone = !todos[pos].isDone;
    this.setState({
-     todos: todos
+     todos: todos // ここの todos で 既存のtodos を上書き
    })
-    
   }
 
   render() {
