@@ -30664,11 +30664,27 @@ var todos = [{
   isDone: true
 }];
 
+function TodoItem(props) {
+  return react_1.default.createElement("li", null, react_1.default.createElement("label", {
+    htmlFor: ""
+  }, react_1.default.createElement("input", {
+    type: "checkbox",
+    checked: props.todo.isDone,
+    onChange: function onChange() {
+      return props.checkTodo(props.todo);
+    }
+  }), react_1.default.createElement("span", {
+    className: props.todo.isDone ? 'done' : ''
+  }, props.todo.title)));
+}
+
 function TodoList(props) {
   var todos = props.todos.map(function (todo) {
-    return react_1.default.createElement("li", {
-      key: todo.id
-    }, todo.title);
+    return react_1.default.createElement(TodoItem, {
+      key: todo.id,
+      todo: todo,
+      checkTodo: props.checkTodo
+    });
   });
   return react_1.default.createElement("ul", null, todos);
 }
@@ -30676,7 +30692,8 @@ function TodoList(props) {
 var Application =
 /** @class */
 function (_super) {
-  __extends(Application, _super);
+  __extends(Application, _super); // private checkTodo: any;
+
 
   function Application() {
     var _this = _super.call(this) || this;
@@ -30684,12 +30701,32 @@ function (_super) {
     _this.state = {
       todos: todos
     };
+    _this.checkTodo = _this.checkTodo.bind(_this);
     return _this;
   }
 
+  Application.prototype.checkTodo = function (props) {
+    var pos = this.state.todos.map(function (todo) {
+      return todo.id;
+    }).indexOf(props.id);
+    console.log(pos);
+    var todos = this.state.todos.map(function (todo) {
+      return {
+        id: todo.id,
+        title: todo.title,
+        isDone: todo.isDone
+      };
+    });
+    todos[pos].isDone = !todos[pos].isDone;
+    this.setState({
+      todos: todos
+    });
+  };
+
   Application.prototype.render = function () {
     return react_1.default.createElement("div", null, react_1.default.createElement(TodoList, {
-      todos: this.state.todos
+      todos: this.state.todos,
+      checkTodo: this.checkTodo
     }));
   };
 

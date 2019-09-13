@@ -12,12 +12,31 @@ const todos: Todos[] = [
   { id: 2, title: "Task 2", isDone: true },
 ]
 
+function TodoItem(props) {
+
+  return (
+    <li>
+      <label htmlFor="">
+        <input type="checkbox"
+          checked={ props.todo.isDone } 
+          onChange={ () => props.checkTodo(props.todo) }
+        />
+        <span className={props.todo.isDone ? 'done' : ''}>
+          { props.todo.title}
+        </span>
+      </label>
+    </li>
+  )
+}
+
 function TodoList(props) {
   const todos = props.todos.map( todo => {
     return(
-      <li key={todo.id}>
-        { todo.title }
-      </li>
+      <TodoItem
+        key={todo.id}
+        todo={todo}
+        checkTodo={ props.checkTodo }
+      />
     )
   })
 
@@ -29,17 +48,41 @@ function TodoList(props) {
 }
 class Application extends React.Component {
   private state: any;
+  private setState: any;
+  // private checkTodo: any;
   constructor() {
     super();
     this.state = {
       todos: todos,
     }
+    this.checkTodo = this.checkTodo.bind(this);
+  }
+  checkTodo(props) {
+    const pos = this.state.todos.map( todo => {
+      return todo.id
+    }).indexOf(props.id)
+    console.log(pos);
+    const todos = this.state.todos.map( todo => {
+      return {
+        id: todo.id,
+        title: todo.title, 
+        isDone: todo.isDone, 
+      }
+    })
+   todos[pos].isDone = !todos[pos].isDone;
+   this.setState({
+     todos: todos
+   })
+    
   }
 
   render() {
     return(
       <div>
-        <TodoList todos={this.state.todos}/>
+        <TodoList
+          todos={this.state.todos}
+          checkTodo={ this.checkTodo }
+        />
       </div>
     )
   }
