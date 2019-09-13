@@ -67,6 +67,18 @@ function TodoForm(props) {
 function getUniqueId() {
   return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
 }
+function TodoHeader(props) {
+  const remaining = props.todos.filter( todo => {
+    return !todo.isDone
+  })
+
+  return(
+    <h1>
+      My Todos
+      <span> {remaining.length} / {props.todos.length}</span>
+    </h1>
+  )
+}
 
 class Application extends React.Component {
   private state: any;
@@ -135,7 +147,8 @@ console.log('Item: ',this.state.item);
   render() {
     return(
       <div className="container">
-        <h1> My Todos </h1>
+        <TodoHeader todos={this.state.todos}/>
+        {/* <h1> My Todos </h1> */}
         <TodoList
           todos={this.state.todos}
           checkTodo={ this.checkTodo }

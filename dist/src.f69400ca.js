@@ -30712,6 +30712,13 @@ function getUniqueId() {
   return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
 }
 
+function TodoHeader(props) {
+  var remaining = props.todos.filter(function (todo) {
+    return !todo.isDone;
+  });
+  return react_1.default.createElement("h1", null, "My Todos", react_1.default.createElement("span", null, " ", remaining.length, " / ", props.todos.length));
+}
+
 var Application =
 /** @class */
 function (_super) {
@@ -30781,7 +30788,9 @@ function (_super) {
   Application.prototype.render = function () {
     return react_1.default.createElement("div", {
       className: "container"
-    }, react_1.default.createElement("h1", null, " My Todos "), react_1.default.createElement(TodoList, {
+    }, react_1.default.createElement(TodoHeader, {
+      todos: this.state.todos
+    }), react_1.default.createElement(TodoList, {
       todos: this.state.todos,
       checkTodo: this.checkTodo,
       deleteTodo: this.deleteTodo
